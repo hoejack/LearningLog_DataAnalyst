@@ -1,0 +1,280 @@
+July Learning Logs
+
+SQL Basics
+SELECT column
+FROM table
+WHERE condition
+
+WHERE field1 LIKE 'Ch%'
+The LIKE clause allows you to tell the database to look for a certain pattern! The percent sign (%) is used as a wildcard to match one or more characters. In the example above, both Chavez and Chen would be returned. Note that in some databases an asterisk (*) is used as the wildcard instead of a percent sign (%).
+If you replace SELECT field1 with SELECT *, you would be selecting all of the columns in the table instead of the field1 column only.
+Comments are text placed between certain characters, /* and */, or after two dashes (--) as shown below.
+You can assign a new name or alias to the column or table names to make them easier to work with (and avoid the need for comments). This is done with a SQL AS clause. E.g. field1 AS last_name, table AS customers.These aliases are good for the duration of the query only. An alias doesn’t change the actual name of a column or table in the database.
+ 
+------------------------------------------------------------------------------------------------------
+
+18th July 2022
+– Insert new values into existing table –
+
+INSERT INTO customer_data.customer_address
+(customer_id, address, city, state…)
+VALUES
+1219, Texas, Texas UC…
+
+– Update tables and changes values if specific condition – 
+
+UPDATE customer_data.customer_address
+SET address = “123 New Address” 
+WHERE customer_id = “1219”
+
+CREATE TABLE IF NOT EXIST – create table in local memory
+DROP TABLE IF EXIST – clean tables personally made in local memory
+– Removing Dupes DISTINCT– 
+SELECT
+	DISTINCT customer_name 
+– LENGTH length of text – 
+SELECT
+	LENGTH(country) as letters_in_country
+– SUBSTR, selecting substring func – 
+WHERE SUBSTR(column name, starting index, how many texts to pull) = “US” 
+Functions will pull out 2 letters starting from index given in one column that is US
+ 
+NOTES for SQL Practice
+– TRIM, trimming function – 
+SELECT 
+	DISTINCT customer_id
+FROM
+	Customer_data.customer_address
+WHERE
+	TRIM(state) = 'OH'
+– Replacing NULL values – 
+SELECT *
+FROM practice_one.car_info
+WHERE num_of_doors IS NULL 
+ 
+UPDATE 
+  practice_one.car_info
+SET 
+  num_of_doors = 'four'
+WHERE
+  make = 'dodge' 
+  AND fuel_type = 'gas'
+  AND body_style = 'sedan'
+ 
+– Replacing wrong inserted string– 
+UPDATE practice_one.car_info
+SET num_of_cylinders = "two"
+WHERE num_of_cylinders = "tow"
+– Replacing wrong inserted internal values – 
+SELECT
+  MIN(compression_ratio) AS min_compression_ratio,
+  MAX(compression_ratio) AS max_compression_ratio
+FROM
+  practice_one.car_info
+WHERE
+  compression_ratio <> 70 – excluding 70 which is incorrect
+ 
+SELECT
+  COUNT(*) AS num_of_rows_to_delete
+FROM
+  practice_one.car_info
+WHERE
+  compression_ratio = 70
+ 
+DELETE practice_one.car_info
+WHERE compression_ratio = 70 
+ 
+– TRIMMING strings that have extra blanks – 
+SELECT 
+  DISTINCT drive_wheels, LENGTH(drive_wheels) AS string_length
+FROM practice_one.car_info
+ 
+------------------------------------------------------------------------------------------------------
+
+19th July 2022
+— Converting Data Types: Strings to INT/FLT – 
+SELECT 
+  CAST(purchase_price AS FLOAT64)
+FROM
+  test_upload.test_table
+ORDER BY
+  CAST(purchase_price AS FLOAT64) DESC 
+ 
+— Converting Data Types: datetime to date only –
+SELECT 
+  CAST(date AS date) AS date_only,
+  purchase_price
+FROM
+  test_upload.test_table
+WHERE
+  date BETWEEN "2020-12-01" AND '2020-12-31' 
+ 
+— Concatenate Two Strings –
+SELECT 
+  CONCAT(product_code, product_color) AS new_product_color
+FROM
+  test_upload.test_table
+WHERE
+  product = "couch"
+ 
+— COALESC: Skipping Null Values and Replaced with Other Fields –
+SELECT
+  COALESCE(product, product_code) AS product_info
+FROM
+  test_upload.test_table
+ 
+— CASE:: The “IF” function (Python) + WHEN/THEN/ELSE/END AS –
+SELECT
+  customer_id,
+  CASE
+    WHEN product = "fan" THEN "fna"
+    WHEN product = "bed" THEN "BED"
+    WHEN product IS NULL THEN "NO VALUE"
+    ELSE product
+    END AS cleaned_data
+FROM
+  test_upload.test_table
+
+------------------------------------------------------------------------------------------------------
+
+28th July 2022
+ 
+SELECT
+  usertype,
+  CONCAT(start_station_name, " to ", end_station_name) AS route,
+  COUNT(*) AS num_trips,
+  ROUND(avg(CAST(tripduration AS INT64)/60), 2) AS duration
+FROM `bigquery-public-data.new_york_citibike.citibike_trips`
+GROUP BY
+  start_station_name, end_station_name, usertype
+ORDER BY 
+  num_trips DESC
+LIMIT 10
+ 
+CONCAT_WS
+A function that adds two or more strings together with a separator
+CONCAT_WS (‘ . ’, ‘www’, ‘google’, ‘com’)
+
+*The separator (being the period) gets input before and after Google when you run the SQL function
+
+------------------------------------------------------------------------------------------------------
+ 
+31th July 2022
+– JOINs Function in SQL – 
+SELECT
+  employees.name AS employee_name,
+  employees.role AS employee_roles,
+  department.name AS department_name
+FROM 
+  employee_data.employees
+FULL OUTER JOIN
+  employee_data.department ON
+  employees.department_id = department.department_id
+ 
+– Creating Alias –  
+SELECT 
+    edu.country_name,
+    summary.country_code,
+    edu.value
+FROM 
+    `bigquery-public-data.world_bank_intl_education.international_education` AS edu
+INNER JOIN 
+    `bigquery-public-data.world_bank_intl_education.country_summary` AS summary
+ON edu.country_code = summary.country_code
+ 
+– HOMEWORK for JOIN Function –  
+SELECT
+ seasons.market AS university,
+ seasons.name AS team_name,
+ seasons.wins,
+ seasons.losses,
+ seasons.ties,
+ mascots.mascot AS team_mascot
+FROM
+ `bigquery-public-data.ncaa_basketball.mbb_historical_teams_seasons` AS seasons
+INNER JOIN
+ `bigquery-public-data.ncaa_basketball.mascots` AS mascots
+ON
+ seasons.team_id = mascots.id
+WHERE
+ seasons.season = 1984
+ AND seasons.division = 1
+ORDER BY seasons.market
+– HOMEWORK for Subqueries Function –  
+SELECT  
+  station_id, 
+  name, 
+  number_of_rides AS number_of_rides_starting_at_station
+FROM 
+  (
+    SELECT
+      start_station_id, 
+      COUNT(*) AS number_of_rides
+    FROM 
+      `bigquery-public-data.new_york_citibike.citibike_trips` 
+      GROUP BY start_station_id
+  )
+  AS station_num_trips
+ 
+  INNER JOIN
+  `bigquery-public-data.new_york_citibike.citibike_stations` ON 
+  station_id = start_station_id
+ 
+  ORDER BY 
+    number_of_rides DESC
+ 
+ 
+SELECT 
+  station_id,
+  name
+FROM
+  `bigquery-public-data.new_york_citibike.citibike_stations`
+WHERE
+  station_id IN
+  ( 
+    SELECT
+      start_station_id
+    FROM
+      `bigquery-public-data.new_york_citibike.citibike_trips`
+    WHERE
+      usertype = "Subscriber"
+ 
+  )
+– HOMEWORK for Subqueries Function – 
+SELECT
+  Warehouse.warehouse_id,
+  CONCAT(Warehouse.state,":",Warehouse.warehouse_alias) AS warehouse_name,
+  COUNT(Orders.order_id) AS number_of_orders,
+  (SELECT
+    COUNT(*)
+  FROM warehouse_orders.orders AS Orders
+  ) AS total_order,
+  CASE
+    WHEN COUNT(Orders.order_id)/(SELECT COUNT(*) FROM warehouse_orders.orders AS Orders) <= 0.20
+    THEN "fulfilled 0-20% of Orders"
+    WHEN COUNT(Orders.order_id)/(SELECT COUNT(*) FROM warehouse_orders.orders AS Orders) > 0.20
+    AND COUNT(Orders.order_id)/(SELECT COUNT(*) FROM warehouse_orders.orders AS Orders) <= 0.60
+    THEN "fulfilled 20-60% of Orders"
+  ELSE
+    "fulfilled more than 60% of Orders"
+  END AS fulfillment_summary
+ 
+FROM warehouse_orders.warehouse AS Warehouse
+LEFT JOIN
+warehouse_orders.orders AS Orders 
+  ON Orders.warehouse_id = Warehouse.warehouse_id
+GROUP BY
+  Warehouse.warehouse_id,
+  warehouse_name
+HAVING
+  COUNT(Orders.order_id) > 0
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
