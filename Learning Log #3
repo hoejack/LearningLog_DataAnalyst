@@ -1,2 +1,13 @@
 12th August 2022
-Basic concept and knowledge about R programming
+
+Task Completed 
+- Learning basic concept and knowledge about R programming
+- R vs Python Advantages and Challenges
+- Brief go-through of what can R programming done (Packages "palmerpenguin")
+- Comparision between spreadsheet, SQL, Python vs R
+- Downloading R and R Studio
+- How to use R Studio (IDE) - panes, tabs, functions, installed packages etc.
+
+install.packages("tidyverse")
+- Installed basic packages in R Studio
+library("tidyverse")
