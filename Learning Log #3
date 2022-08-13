@@ -103,3 +103,41 @@ file.create (“new_text_file.txt”)
 file.create (“new_word_file.docx”) 
 file.create (“new_csv_file.csv”) 
 unlink (“some_.file.csv”) # To delete file
+
+IF, ELSE, ELSE IF condition
+if (condition) {expr} # Curly Braces
+
+TRUE | FALSE
+if(TRUE|FALSE == FALSE) {print("testing")}
+> testing
+
+-----------------------------------------------------------------------
+Tidyverse packages
+ggplot2 - Data Viz
+tidyr - Data Cleaning 
+readr - Data Import
+dplyr - Data Manipulation suggestion
+
+filtered_tg <- filter(ToothGrowth, dose == 0.5)
+> View(filtered_tg)
+> arrange(filtered_tg, len)
+    len supp dose
+1   4.2   VC  0.5
+2   5.2   VC  0.5
+3   5.8   VC  0.5
+4   6.4   VC  0.5
+5   7.0   VC  0.5
+.....
+
+PIPE function %>%
+> filtered_toothgrowth <- ToothGrowth %>% 
++ filter(dose == 0.5) %>% 
++ arrange(len)
+> View(filtered_toothgrowth)
+
+1   4.2   VC  0.5
+2   5.2   VC  0.5
+3   5.8   VC  0.5
+4   6.4   VC  0.5
+5   7.0   VC  0.5
+.....
