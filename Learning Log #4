@@ -83,3 +83,133 @@ The readxl package makes it easy to transfer data from Excel into R.
 > readxl_example("deaths.xls")
 [1] "/cloud/lib/x86_64-pc-linux-gnu-library/4.2/readxl/extdata/deaths.xls"
 > read_excel(readxl_example("deaths.xls"))
+
+------------------------------------------------------------------------------
+
+Data Cleaning with R
+- Packages used: here, skimr, janitor, dplyr
+
+Checking NULL values
+> library("palmerpenguins")
+> skim_without_charts(penguins)
+── Data Summary ────────────────────────
+                           Values  
+Name                       penguins
+Number of rows             344     
+Number of columns          8       
+_______________________            
+Column type frequency:             
+  factor                   3       
+  numeric                  5       
+________________________           
+Group variables            None    
+
+── Variable type: factor ──────────────────────
+  skim_variable n_missing complete_rate ordered
+1 species               0         1     FALSE  
+2 island                0         1     FALSE  
+3 sex                  11         0.968 FALSE 
+
+------------------------------------------------------------------------------
+
+EXCLUDING SELECT USING (-)
+penguins %>% 
+  select(-species)
+# SHOWS ALL COLUMN EXCEPT SPECIES
+
+RENAMING COLUMNS
+penguins %>%
+  rename(island_new = island)
+  
+rename_with(penguins, toupper)
+rename_with(penguins, tolower)
+
+
+------------------------------------------------------------------------------
+
+Logical AND (&&) and Element Wise AND (&)
+
+x <- c(3, 5, 7)
+y <- c(2, 4, 6)
+
+Then run the code with a single ampersand (&). The output is boolean (TRUE or FALSE).
+x < 5 & y < 5
+[1]  TRUE FALSE FALSE
+# Compares all vector elements
+
+x < 5 && y < 5
+[1] TRUE
+# Compare only first element
+
+------------------------------------------------------------------------------
+SORTING, FILTERING AND GROUPBY
+penguins2 <- penguins %>% arrange(-bill_length_mm)
+# (-) operator = descending order
+
+> penguins %>% group_by(island) %>% drop_na() %>% summarise(mean_bill_length_mm = mean(bill_length_mm))
+# A tibble: 3 × 2
+  island    mean_bill_length_mm
+  <fct>                   <dbl>
+1 Biscoe                   45.2
+2 Dream                    44.2
+3 Torgersen                39.0
+
+penguins %>% group_by(species, island) %>% drop_na() %>% summarise(mean_bl = mean(bill_length_mm), max_bl = max(bill_length_mm))
+`summarise()` has grouped output by 'species'. You can override using the
+`.groups` argument.
+# A tibble: 5 × 4
+# Groups:   species [3]
+  species   island    mean_bl max_bl
+  <fct>     <fct>       <dbl>  <dbl>
+1 Adelie    Biscoe       39.0   45.6
+2 Adelie    Dream        38.5   44.1
+3 Adelie    Torgersen    39.0   46  
+4 Chinstrap Dream        48.8   58  
+5 Gentoo    Biscoe       47.6   59.6
+
+> penguins %>% filter(species == "Adelie")
+
+------------------------------------------------------------------------------
+
+DATA MANIPULATION 
+id <- c(1:10)
+name <- c("John Mendes", "Rob Stewart", "Rachel Abrahamson", "Christy Hickman", "Johnson Harper", "Candace Miller", "Carlson Landy", "Pansy Jordan", "Darius Berry", "Claudia Garcia")
+job_title <- c("Professional", "Programmer", "Management", "Clerical", "Developer", "Programmer", "Management", "Clerical", "Developer", "Programmer")
+employee <- data.frame(id, name, job_title)
+
+separate(employee, name, into = c("first_name", "last_name"), sep = " ")
+# Separate with delimeter
+
+unite(employee1, "combined_name", first_name, last_name, sep = " ")
+# Concatanate function in R
+
+------------------------------------------------------------------------------
+
+library("Tmisc")
+data("quartet")
+View(quartet)
+
+quartet %>% 
+  group_by(set) %>% 
+  summarise(mean(x), sd(x), mean(y), sd(y), cor(x,y))
+
+------------------------------------------------------------------------------
+
+CHECKING BIAS IN R STUDIO 
+
+install.packages("SimDesign")
+library(SimDesign)
+
+actual_temp <- c(68.3, 70, 72, 71, 67, 70)
+predicted_temp <- c(67, 69, 71, 70, 67, 69)
+bias(actual_temp, predicted_temp)
+
+actual_sales <- c(150, 203, 137, 247, 116, 287)
+predicted_sales <- c(200, 300, 150, 250, 300, 500)
+bias(actual_sales, predicted_sales)
+
+
+1 I             9    3.32      7.50    2.03       0.816
+2 II            9    3.32      7.50    2.03       0.816
+3 III           9    3.32      7.5     2.03       0.816
+4 IV            9    3.32      7.50    2.03       0.817
