@@ -1,0 +1,70 @@
+15th August 2022
+
+Data Visualization in R programming
+- Basic of ggplot2
+- Aesthetic (visual property -aes)
+- Geometric Obj (geom object to represent data - geom)
+- Facets (Display smaller groups/subsets)
+- Labels (Title and labels)
+
+Creating Viz using Palmer Penguins dataset
+> ggplot(data = penguins) + geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g))
+
+---------------------------------------------------------------------------------
+
+Hands On Activity
+
+> ggplot(data = hotel_bookings) + 
++ geom_point(mapping = aes(x = lead_time, y = children))
+Warning message:
+Removed 4 rows containing missing values (geom_point). 
+> View(hotel_bookings)
+> ggplot(data = hotel_bookings) +
+> ggplot(data = hotel_bookings) + geom_point(mapping = aes(x = children, y = stays_in_weekend_nights))
+
+---------------------------------------------------------------------------------
+
+CUSTOMIZABLE GGPLOT2 AES FUNC
+
+> ggplot(data = penguins) 
+   + geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species, shape = species))
+   
+# alpha = species, size = species etc.
+
+---------------------------------------------------------------------------------
+
+DIFFERENT GEOMS
+
+GEOM SMOOTH
+ggplot(data = penguins) + geom_smooth(mapping = aes(x = flipper_length_mm, y = body_mass_g))
+
+GEOM SMOOTH BY LINETYPE
+ggplot(data = penguins) + geom_smooth(mapping = aes(x = flipper_length_mm, y = body_mass_g, linetype = species))
+
+OVERLAPPING JITTER WITH SMOOTH
+ggplot(data = penguins) + geom_jitter(mapping = aes(x = flipper_length_mm, y = body_mass_g)) +  geom_smooth(mapping = aes(x = flipper_length_mm, y = body_mass_g))
+
+GEOMBARS
+> ggplot(data = diamonds) + geom_bar(mapping = aes(x = cut, fill = cut))
+
+---------------------------------------------------------------------------------
+
+FACET WRAPS AND GRID
+ggplot(data = penguins) + geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)) + facet_wrap(~species)
+
+ggplot(data = diamonds, aes(x = color, fill = cut)) +
+  geom_bar() +
+  facet_wrap(~cut)
+  
+ggplot(drop_na(data = penguins)) + 
+  geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)) + 
+  facet_grid(sex~species)
+
+---------------------------------------------------------------------------------
+
+FILTERING DATA BEFORE GGPLOT
+
+data %>%
+    filter(variable1 == "DS") %>%  
+    ggplot(aes(x = weight, y = variable2, colour = variable1)) +  
+    geom_point(alpha = 0.3,  position = position_jitter()) + stat_smooth(method = "lm")
