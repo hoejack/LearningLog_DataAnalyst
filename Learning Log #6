@@ -1,0 +1,39 @@
+16th August 2022
+
+Annotation & Labels
+
+LABELS
+ggplot(data = penguins) + 
+  geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)) + 
+  labs(title = "Palmer Penguins: Body Mass vs Flipper Length", subtitle = "Species of Three Penguins",
+       caption = "by Dr.Jack")
+
+ANNOTATE
+# annotate("text" , x = 210, y = 5700, label = "The Gentoos are the largest", size = 2.5, fontface = "italic", angle = 30)
+
+--------------------------------------------------------------------------------
+
+ggsave() function
+# Save images in PNG format 
+
+p <- ggplot(data = penguins) + 
+  geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)) + 
+  labs(title = "Palmer Penguins: Body Mass vs Flipper Length", subtitle = "Species of Three Penguins",
+       caption = "by Dr.Jack") + 
+  annotate("text" , x = 210, y = 5700, label = "The Gentoos are the largest", size = 2.5, fontface = "italic", angle = 30)
+
+ggsave("Three Penguin Species.png")
+
+--------------------------------------------------------------------------------
+
+HANDS ON ACTIVITY 
+
+mindate = min(hotel_bookings$arrival_date_year)
+maxdate = max(hotel_bookings$arrival_date_year)
+
+ggplot(data = hotel_bookings) +
+  geom_bar(mapping = aes(x = market_segment)) +
+  facet_wrap(~hotel) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title="Comparison of market segments by hotel type for hotel bookings",
+       subtitle=paste0("Data from: ", mindate, " to ", maxdate))
