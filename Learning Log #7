@@ -1,0 +1,42 @@
+18 August 2022
+
+R Markdown - Reporting and Documentation
+- install.packages("rmarkdown)
+- Basic function and knowledge
+- Knit Function 
+
+Text Formatting points 
+**BOLD** - bold font
+_Italic_ - italic font
+# Header - Largest header
+##### Header - Smaller header
+* - Creates bullet point
+<https://www.youtube.com/> - Link
+[link](www.google.com) - Embedded text link
+[!][caption](http://) - Photo Display
+
+```{r}
+```
+# Code chunk to document and execute code result in HTML etc.
+
+-------------------------------------------------------------------
+Code Chunk 
+- Can turn off show code and output in Code Chunk Settings
+```{r loading packages}
+library("tidyverse")
+library("palmerpenguins")
+```
+-------------------------------------------------------------------
+Output
+pdf_document – This creates a PDF file with LaTeX (an open source document layout system). If you don’t already have LaTeX, RStudio will automatically prompt you to install it.
+word_document – This creates a Microsoft Word document (.docx).
+odt_document – This creates an OpenDocument Text document (.odt).
+rtf_document – This creates a Rich Text Format document (.rtf).  
+md_document – This creates a Markdown document (which strictly conforms to the original Markdown specification)
+github_document – This creates a GitHub document which is a customized version of a Markdown document designed for sharing on GitHub.
+
+beamer_presentation – for PDF presentations with beamer
+ioslides_presentation – for HTML presentations with ioslides
+slidy_presentation – for HTML presentations with Slidy
+powerpoint_presentation – for PowerPoint presentations
+revealjs : : revealjs_presentation – for HTML presentations with reveal.js
