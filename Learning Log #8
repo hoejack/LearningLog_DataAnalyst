@@ -1,0 +1,35 @@
+23 October 2022
+Python Pandas Free Interview Test
+
+_______________________________________________________________________________________________________________________________________________________________________
+
+# Find the titles of workers that earn the highest salary. Output the highest-paid title or multiple titles that share the highest salary.
+
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+merged_df = worker.merge(title, how='left', left_on = 'worker_id', right_on = 'worker_ref_id')
+merged_df = merged_df[['worker_title', 'salary']]
+output = merged_df[merged_df['salary'] == merged_df['salary'].max()]
+output['worker_title'] 
+
+--> SOLVED.
+
+_______________________________________________________________________________________________________________________________________________________________________
+
+# You're given a dataset of health inspections. Count the number of violation in an inspection in 'Roxanne Cafe' for each year. 
+# If an inspection resulted in a violation, there will be a value in the 'violation_id' column. Output the number of violations by year in ascending order.
+
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+sf_restaurant_keycolumns = sf_restaurant_health_violations[['business_name' , 'inspection_date', 'violation_id']]
+roxanne_cafe_df =  sf_restaurant_keycolumns[sf_restaurant_keycolumns['business_name'].str.lower().str.contains("roxanne cafe")]
+roxanne_cafe_df['inspection_year'] = pd.to_datetime(roxanne_cafe_df['inspection_date']).dt.year
+roxanne_cafe_df.groupby(['inspection_year'])['violation_id'].count().reset_index()
+
+--> SOLVED.
+
+_______________________________________________________________________________________________________________________________________________________________________
