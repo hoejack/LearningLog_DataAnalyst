@@ -33,3 +33,45 @@ roxanne_cafe_df.groupby(['inspection_year'])['violation_id'].count().reset_index
 --> SOLVED.
 
 _______________________________________________________________________________________________________________________________________________________________________
+
+
+# Calculate each user's average session time. A session is defined as the time difference between a page_load and page_exit. 
+# For simplicity, assume a user has only 1 session per day and if there are multiple of the same events on that day, 
+# consider only the latest page_load and earliest page_exit. Output the user_id and their average session time.
+
+# Import your libraries
+import pandas as pd
+import numpy as np
+
+# Start writing code
+# facebook_web_log.head()
+
+fwl = facebook_web_log
+
+# Split page_load and page_exit into two different columns and merge it using on 'user_id' variables.
+# Uses dropna function to remove rows that does not meet this conditions (consider only latest page_load and earliest page_exit)
+
+df = pd.merge(fwl.loc[fwl['action'] == 'page_load', ['user_id', 'timestamp']], 
+              fwl.loc[fwl['action'] == 'page_exit', ['user_id', 'timestamp']], 
+              how = 'left', on = 'user_id', suffixes = ['_load', '_exit']).dropna()
+              
+
+# Create Date columns for groubyby function
+
+df['date_load'] = df['timestamp_load'].dt.date
+df = df[df['timestamp_load'] < df['timestamp_exit']]
+
+# Agg fuction to call out only max timestamp load and min timestamp exit
+
+df = df.groupby(['user_id', 'date_load']).agg({'timestamp_load': 'max', 'timestamp_exit': 'min'}).reset_index()
+
+# Create column to calculate duration each day
+
+df['duration'] = df['timestamp_exit'] - df['timestamp_load']
+
+# Groupby users to calculate user average duration by users, using agg function to calculate mean
+
+result = df.groupby(['user_id'])['duration'].agg(lambda x: np.mean(x)).reset_index()
+
+
+
